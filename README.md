@@ -8,6 +8,8 @@ sampleフォルダには動作確認用コードが入っています。
 * serial:シリアルモニタに表示されるか確認
 * firbase:firebaseにアクセスできるか確認
 * UltrasonicDisplay:Groveキット(7セグ)が使えるか確認
+* PbHub:PbHubと角度センサーが使えるか確認
+* ServoModule:サーボモジュールとサーボモーターが使えるか確認
 
 demoフォルダには本番デモ用コードが入っています。
 
@@ -16,3 +18,10 @@ demoフォルダには本番デモ用コードが入っています。
 * firebase_face:アバターの表情を送る側のコード
 * firebase_receive:受け取る側のコード
 
+* firebase_all_in_one:受け取る側と送る側の両方を入れたコード。サーボモーターおよび角度センサーのコードも入っている。動くけど動きが悪い
+
+* firebase_only_face_risa:りさちゃん用のコード
+* firebase_only_face_jun:任くん用のコード
+
+# caution
+* wifiの値を自分のものに変更して下さい

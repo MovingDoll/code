@@ -54,7 +54,6 @@ void setup() {
   avatar.init();
 }
 //****メインループ********************
-bool avatar_init = true;
 void loop() {
   M5.update();
 //  if(avatar_init){
