@@ -1,6 +1,13 @@
 # code
 プログラムはこちら
-# How to use
+
+# Requirement
+* M5Stack　Gray
+* Angle Unit
+* SERVO Module
+* PbHUB UNIT
+
+# Sampleフォルダ
 
 sampleフォルダには動作確認用コードが入っています。
 
@@ -11,6 +18,8 @@ sampleフォルダには動作確認用コードが入っています。
 * PbHub:PbHubと角度センサーが使えるか確認
 * ServoModule:サーボモジュールとサーボモーターが使えるか確認
 
+# demoフォルダ
+
 demoフォルダには本番デモ用コードが入っています。
 
 開発する際にはこのコードのみをいじってください。
@@ -18,10 +27,14 @@ demoフォルダには本番デモ用コードが入っています。
 * firebase_face:アバターの表情を送る側のコード
 * firebase_receive:受け取る側のコード
 
-* firebase_all_in_one:受け取る側と送る側の両方を入れたコード。サーボモーターおよび角度センサーのコードも入っている。動くけど動きが悪い
+
+* firebase_all_in_one:受け取る側と送る側の両方を入れたコード。(サーボモーターおよび角度センサーのコード付き)
+
 
 * firebase_only_face_risa:りさちゃん用のコード
 * firebase_only_face_jun:任くん用のコード
 
-# caution
+# Note
 * wifiの値を自分のものに変更して下さい
+
+# Author
