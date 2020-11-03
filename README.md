@@ -12,7 +12,7 @@
 sampleフォルダには動作確認用コードが入っています。
 
 * wifi:wifiが接続するか確認
-* serial:シリアルモニタに表示されるか確認
+* serial:シリアルモタに表示されるか確認
 * firbase:firebaseにアクセスできるか確認
 * UltrasonicDisplay:Groveキット(7セグ)が使えるか確認
 * PbHub:PbHubと角度センサーが使えるか確認
