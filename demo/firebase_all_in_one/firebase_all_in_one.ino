@@ -1,9 +1,11 @@
 #include <ArduinoJson.h>
-#include <IOXhop_FirebaseStream.h>
-#include <IOXhop_FirebaseESP32.h>
+//#include <IOXhop_FirebaseStream.h>
+//#include <IOXhop_FirebaseESP32.h>
 #include <M5Stack.h>
 #include <WiFi.h>
 #include "porthub.h"
+#include "FirebaseESP32.h"
+
 #define SERVO_ADDR 0x53
 
 //****初期値設定****
@@ -28,11 +30,12 @@ uint8_t HUB_ADDR[6]={HUB1_ADDR,HUB2_ADDR,HUB3_ADDR,HUB4_ADDR,HUB5_ADDR,HUB6_ADDR
 
 //wifi
 #define WIFI_SSID "************"//自分のルーターのSSIDに変更してください
-#define WIFI_PASSWORD "****************" //自分のルーターのパスワードに変更してください
+#define WIFI_PASSWORD "**********" //自分のルーターのパスワードに変更してください
 
 // FirebaseのデータベースURL（自分のデータベースURLに変更してください）
 #define FIREBASE_DATABASE_URL "m5data2-868b2.firebaseio.com"
-
+#define FIREBASE_AUTH "*********************"
+FirebaseData firebaseData;
 //*****セットアップ******************
 void setup() {
   M5.begin();
@@ -48,7 +51,8 @@ void setup() {
   }
 
   // Firebase初期化
-   Firebase.begin(FIREBASE_DATABASE_URL);
+   Firebase.begin(FIREBASE_DATABASE_URL, FIREBASE_AUTH);
+   Firebase.reconnectWiFi(true);
    
   // WiFi Connected
   Serial.println("\nWiFi Connected.");
@@ -81,7 +85,12 @@ void Servo_write_us(uint8_t number, uint16_t us) {
 }
 //****メインループ********************
 void send(int angle){
-  Firebase.setInt("/M5Stack/dog/angle", angle);
+//  FirebaseJsonArray arr;
+//  
+ // int str[] = {1,2,3,4,5};
+//  
+//  arr.set("/[0]/[1]", (const int) str);
+  Firebase.setInt(firebaseData, "/M5Stack/dog/angle2", angle);
   return;
 }
 
@@ -110,7 +119,7 @@ void loop() {
     M5.Lcd.setCursor(100, 200);
     M5.Lcd.setTextSize(5);
     M5.Lcd.print("send!");
-    Firebase.setInt("/M5Stack/dog/face", num);
+    Firebase.setInt(firebaseData, "/M5Stack/dog/face", num);
     M5.Lcd.fillScreen(BLACK);
     eye(num%6);
   }
@@ -121,7 +130,7 @@ void loop() {
   Serial.println("\n");
 
   //前と比べて50以上変化あれば送信(負荷を減らすため)
-  if(abs(before_angle-angle)>50&&fluency!=2){
+  if(abs(before_angle-angle)>20){
     send(angle);
   }
   before_angle = angle;
@@ -132,8 +141,10 @@ void loop() {
 //    fluency = 10;
 //  }
   //10回に１回or毎回データベースにアクセスし、変化があるか確認する
-  if(count%3==0){
-    now_received_angle = int(Firebase.getFloat("/M5Stack/cat/angle"));
+  //if(count%1==0){
+    if(Firebase.getInt(firebaseData, "/M5Stack/dog/angle2")){
+      now_received_angle = int(firebaseData.intData());
+    }
     
     if(now_received_angle!=received_angle){
       Servo_write_us(0,now_received_angle*3);
@@ -142,12 +153,15 @@ void loop() {
       Serial.print(now_received_angle);
       Serial.println("\n");
       received_angle = now_received_angle;
-      changed = count;
+//      changed = count;
     }
-  }
+  //}
+  
   //10回に１回データベースにアクセスし、変化があるか確認する
-  if(count%17==0){
-    now_received_face = int(Firebase.getFloat("/M5Stack/cat/face"));
+  //if(count%17==0){
+    if(Firebase.getInt(firebaseData, "/M5Stack/cat/face")){
+      now_received_face = int(firebaseData.intData());
+    }
     if(now_received_face!=received_face){
       num = now_received_face;   
       Serial.print("received");
@@ -161,7 +175,7 @@ void loop() {
       M5.Lcd.setTextSize(5);
       M5.Lcd.print("received!");
     }
-  }
+  //}
   count++;
 
   delay(100);
