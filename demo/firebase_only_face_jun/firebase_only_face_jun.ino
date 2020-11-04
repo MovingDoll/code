@@ -1,24 +1,30 @@
 #include <ArduinoJson.h>
-#include <IOXhop_FirebaseStream.h>
-#include <IOXhop_FirebaseESP32.h>
+#include "FirebaseESP32.h"//ツール→ライブラリを管理→ Firebase　ESP32　Client
 #include <M5Stack.h>
 #include <WiFi.h>
 
 
 //初期値設定
-int num = 0;
+int num = 0;//表情のパターン
 
+int now_received_face=0;//相手から受け取った表情
+int received_face=0;//以前受け取った値と比較する用
+
+int count = 0;//loopの周期をカウント
 
 //wifi
 #define WIFI_SSID "**********"//自分のルーターのSSIDに変更してください
-#define WIFI_PASSWORD "****************:" //自分のルーターのパスワードに変更してください
+#define WIFI_PASSWORD "***************:" //自分のルーターのパスワードに変更してください
 
 // FirebaseのデータベースURL（自分のデータベースURLに変更してください）
-#define FIREBASE_DATABASE_URL "m5data-f5280.firebaseio.com"
+#define FIREBASE_DATABASE_URL "m5data2-868b2.firebaseio.com"
+#define FIREBASE_AUTH "***********************"//Slackで送ったものに変更
+
+FirebaseData firebaseData;
 
 //*****セットアップ******************
 void setup() {
-  M5.begin(true, false, true);
+  M5.begin();
   M5.Power.begin();
 
   // Wi-Fi接続
@@ -31,7 +37,8 @@ void setup() {
   Serial.println();
 
   // Firebase初期化
-   Firebase.begin(FIREBASE_DATABASE_URL);
+   Firebase.begin(FIREBASE_DATABASE_URL, FIREBASE_AUTH);
+   Firebase.reconnectWiFi(true);
    
   // WiFi Connected
   Serial.println("\nWiFi Connected.");
@@ -39,6 +46,8 @@ void setup() {
   M5.Lcd.setTextSize(5);
   M5.Lcd.setCursor(10, 100);
 
+  //顔の表情
+  eye(num%6);
 }
 
 
@@ -48,8 +57,6 @@ void loop() {
   M5.update();
   //M5.Lcd.setCursor(10, 100);
   
-  eye(num%6);
-
   //***実行内容***
   //A,Cボタンでアバターを選択してBボタンで送る
   //相手がアバターを更新したら、それを検知して変更を反映させる
@@ -58,28 +65,47 @@ void loop() {
   if (M5.BtnA.wasReleased()) {
     num--;
     M5.Lcd.fillScreen(BLACK);
+    eye(num%6);
   }
 
   if (M5.BtnC.wasPressed()){
     num++;
     M5.Lcd.fillScreen(BLACK);
+    eye(num%6);
   }
   
   if(M5.BtnB.wasReleased()) {
-    Firebase.setInt("/M5Stack/MovingFace/num", num);
-    Firebase.setInt("/M5Stack/MovingFace/new", 1111);
-    M5.Lcd.setCursor(50, 170);
+    M5.Lcd.setCursor(160, 200);
+    M5.Lcd.setTextSize(5);
     M5.Lcd.print("send!");
+    Firebase.setInt(firebaseData, "/M5Stack/risa/face", num);
     delay(1000);
     M5.Lcd.fillScreen(BLACK);
+    eye(num%6);
 
   }
 
-//  //new=1111になっているのは相手が更新した証拠
-  if(int(Firebase.getFloat("/M5Stack/MovingFace/new"))==2222){
-    num =  int(Firebase.getFloat("/M5Stack/MovingFace/num"));
-    Firebase.setInt("/M5Stack/num/new", 0);
-    M5.Lcd.fillScreen(BLACK);
+  //7回周期で受け取る
+  if(count%7==0){
+    if(Firebase.getInt(firebaseData, "/M5Stack/jun/face")){
+      now_received_face = int(firebaseData.intData());
+    }
+    if(now_received_face!=received_face){
+      num = now_received_face;   
+      Serial.print("received");
+      Serial.print(num);
+      Serial.println("\n");
+      received_face = now_received_face;
+      
+      M5.Lcd.fillScreen(BLACK);
+      eye(num%6);
+      M5.Lcd.setCursor(100, 200);
+      M5.Lcd.setTextSize(5);
+      M5.Lcd.print("received!");
+    }
   }
+  count++;
+  Serial.print(count);
+  Serial.println("\n");
 
 }
