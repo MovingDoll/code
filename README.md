@@ -38,3 +38,11 @@ demoフォルダには本番デモ用コードが入っています。
 * wifiの値を自分のものに変更して下さい
 
 # Author
+
+# Reference
+* Firebaseのセットアップ
+  https://www.mgo-tec.com/blog-entry-firebase-realtime-database-sever-sent-events-esp32-m5stack.html
+* M5StackのLibrary: firebase-ESP32-client-document
+  https://github.com/mobizt/Firebase-ESP32
+* firebase-ESP32-clientの応用例
+  https://github.com/mobizt/Firebase-ESP32/blob/master/examples/Beginner_start_here/Beginner_start_here.ino
