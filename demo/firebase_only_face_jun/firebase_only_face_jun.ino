@@ -78,7 +78,7 @@ void loop() {
     M5.Lcd.setCursor(160, 200);
     M5.Lcd.setTextSize(5);
     M5.Lcd.print("send!");
-    Firebase.setInt(firebaseData, "/M5Stack/risa/face", num);
+    Firebase.setInt(firebaseData, "/M5Stack/jun/face", num);
     delay(1000);
     M5.Lcd.fillScreen(BLACK);
     eye(num%6);
@@ -87,7 +87,7 @@ void loop() {
 
   //7回周期で受け取る
   if(count%7==0){
-    if(Firebase.getInt(firebaseData, "/M5Stack/jun/face")){
+    if(Firebase.getInt(firebaseData, "/M5Stack/risa/face")){
       now_received_face = int(firebaseData.intData());
     }
     if(now_received_face!=received_face){
