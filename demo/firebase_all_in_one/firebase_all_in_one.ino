@@ -3,8 +3,9 @@
 //#include <IOXhop_FirebaseESP32.h>
 #include <M5Stack.h>
 #include <WiFi.h>
+#include <Wire.h>
 #include "porthub.h"
-#include "FirebaseESP32.h"
+#include <FirebaseESP32.h>
 
 #define SERVO_ADDR 0x53
 
@@ -21,6 +22,9 @@ int received_angle=0;//以前受け取った値と比較する用
 int now_received_face=0;//相手から受け取った表情
 int received_face=0;//以前受け取った値と比較する用
 
+String mypost;//受信するデータポスト
+String topost;//送信するデータポスト
+
 int changed = 0;
 int fluency = 10;
 
@@ -29,13 +33,15 @@ PortHub porthub;
 uint8_t HUB_ADDR[6]={HUB1_ADDR,HUB2_ADDR,HUB3_ADDR,HUB4_ADDR,HUB5_ADDR,HUB6_ADDR};
 
 //wifi
-#define WIFI_SSID "techgarage"//自分のルーターのSSIDに変更してください
-#define WIFI_PASSWORD "killtheproject" //自分のルーターのパスワードに変更してください
+#define WIFI_SSID "Buffalo-G-10D8"//自分のルーターのSSIDに変更してください
+#define WIFI_PASSWORD "hcc468kcuhkk5" //自分のルーターのパスワードに変更してください
 
 // FirebaseのデータベースURL（自分のデータベースURLに変更してください）
-#define FIREBASE_DATABASE_URL "m5data2-868b2.firebaseio.com"
-#define FIREBASE_AUTH "qeG2HHAbMYz23abY1dKTwSbyhikt48Y0PySJhpJo"
+#define FIREBASE_DATABASE_URL "m5stack-data.firebaseio.com"
+#define FIREBASE_AUTH "QCT6zw9CXbqM6TITH1AROK3HITZhNdhVtZTuu3HB"
 FirebaseData firebaseData;
+IPAddress ip;
+
 //*****セットアップ******************
 void setup() {
   M5.begin();
@@ -56,7 +62,10 @@ void setup() {
    
   // WiFi Connected
   Serial.println("\nWiFi Connected.");
-  Serial.println(WiFi.localIP());
+  ip = WiFi.localIP();
+  Serial.println(ip);
+  mypost = iptostr();// = "/xxx.xxx.xx.x"
+  topost = mypost;
 
   //サーボモーター
   Wire.begin(21, 22, 100000);
@@ -90,7 +99,7 @@ void send(int angle){
  // int str[] = {1,2,3,4,5};
 //  
 //  arr.set("/[0]/[1]", (const int) str);
-  Firebase.setInt(firebaseData, "/M5Stack/dog/angle", angle);
+  Firebase.setInt(firebaseData, topost+"/angle", angle);
   return;
 }
 
@@ -119,7 +128,8 @@ void loop() {
     M5.Lcd.setCursor(100, 200);
     M5.Lcd.setTextSize(5);
     M5.Lcd.print("send!");
-    Firebase.setInt(firebaseData, "/M5Stack/dog/face", num);
+    Firebase.setString(firebaseData, topost+"/name", mypost);
+    Firebase.setInt(firebaseData, topost+"/face", num);
     M5.Lcd.fillScreen(BLACK);
     eye(num%6);
   }
@@ -142,7 +152,7 @@ void loop() {
 //  }
   //10回に１回or毎回データベースにアクセスし、変化があるか確認する
   //if(count%1==0){
-    if(Firebase.getInt(firebaseData, "/M5Stack/cat/angle")){
+    if(Firebase.getInt(firebaseData, mypost+"/angle")){
       now_received_angle = int(firebaseData.intData());
     }
     
@@ -159,7 +169,7 @@ void loop() {
   
   //10回に１回データベースにアクセスし、変化があるか確認する
   //if(count%17==0){
-    if(Firebase.getInt(firebaseData, "/M5Stack/cat/face")){
+    if(Firebase.getInt(firebaseData, mypost+"/face")){
       now_received_face = int(firebaseData.intData());
     }
     if(now_received_face!=received_face){

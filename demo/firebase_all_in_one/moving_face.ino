@@ -93,6 +93,10 @@ void eye(char feeling){
         line(xl1,yl1,xl2,yl2,ebth);
         line(xr1,yr1,xr2,yr2,ebth);
     }
+
+    M5.Lcd.setCursor(0, 0);
+    M5.Lcd.setTextSize(3);
+    M5.Lcd.print(getBatteryLevel());
 }
 void circle(int x, int y, int r, char s){
     for (int i=x-r; i<=x+r; i++){
