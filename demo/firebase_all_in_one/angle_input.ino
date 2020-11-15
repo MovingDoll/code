@@ -65,6 +65,13 @@ void angle_input(){
 int received(){
 	int proceed = 0;
 	eye(num%6);
+  M5.Lcd.setCursor(0, 10);
+  M5.Lcd.setTextSize(1);
+  if (Firebase.getString(firebaseData, mypost+"/name")){
+    strtoip(ip2, String(firebaseData.stringData()));
+    M5.Lcd.print("received from: ");
+    M5.Lcd.print(ip2);
+  }
   
 	M5.Lcd.setTextSize(3);
 	M5.Lcd.setCursor(45,210);

@@ -8,9 +8,15 @@
 #define SERVO_ADDR 0x53
 
 /***************Definition*********************/
-int num = 0;          //表情のパターン
-String mypost;        //受信するデータポスト
-String topost;        //送信するデータポスト
+int num = 0;              //表情のパターン
+int angle = 0;            //角度センサー
+int before_angle = 0;     //角度センサーの前の数値と比較する用
+int now_received_angle=0; //相手から受け取った角度
+int received_angle=0;     //以前受け取った値と比較する用
+int now_received_face=0;  //相手から受け取った表情
+int received_face=0;      //以前受け取った値と比較する用
+String mypost;            //受信するデータポスト
+String topost;            //送信するデータポスト
 
 // PbHUB UNIT
 PortHub porthub;
@@ -83,13 +89,6 @@ void Servo_write_us(uint8_t number, uint16_t us) {
 
 /***************loop********************/
 void loop() {
-  int angle = 0;            //角度センサー
-  int before_angle = 0;     //角度センサーの前の数値と比較する用
-  int now_received_angle=0; //相手から受け取った角度
-  int received_angle=0;     //以前受け取った値と比較する用
-  int now_received_face=0;  //相手から受け取った表情
-  int received_face=0;      //以前受け取った値と比較する用
-  
   M5.update();
   
   //***実行内容***
@@ -155,17 +154,12 @@ void loop() {
     Serial.print(num);
     Serial.println("\n");
     received_face = now_received_face;
-      
-    eye(num%6);
-    M5.Lcd.setCursor(0, 10);
-    M5.Lcd.setTextSize(1);
-    if (Firebase.getString(firebaseData, mypost+"/name")){
-      M5.Lcd.print("received from: "+String(firebaseData.stringData()));
-    }
+
 	  if (received() == 1){   // send back
-	    topost = Firebase.getString(firebaseData, mypost+"/name");
-	  } else {  // not send back
-	    eye(num%6);  
+      if (Firebase.getString(firebaseData, mypost+"/name")){
+        topost = String(firebaseData.stringData());
+      }
 	  }
+	  eye(num%6);
   }
 }

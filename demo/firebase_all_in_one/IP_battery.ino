@@ -18,16 +18,19 @@ void printAcc(){
     // My IP
     M5.Lcd.setCursor(0, 0);
     M5.Lcd.print("My IP: ");
-    printIP(ip1);
+    M5.Lcd.print(ip1);
     // connected IP
     M5.Lcd.setCursor(0,10);
     M5.Lcd.print("To IP: ");
-    printIP(ip2);
+    M5.Lcd.print(ip2);
 }
-void printIP(IPAddress ip){
-  for (int i = 0; i < 4; i++){
-    M5.Lcd.print(ip[i]);
-    if (i < 3){ M5.Lcd.print("."); }
+void strtoip(IPAddress ip, String s){
+  for (int i=0; i<4; i++){
+    int digit = 0;
+    for (int j=0; s[j]!='.' && s[j]!='\0'; j++){
+      digit += digit*10 + s[j] - '0';
+    }
+    ip[i] = digit;
   }  
 }
 int8_t getBatteryLevel(){
