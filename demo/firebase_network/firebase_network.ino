@@ -5,8 +5,8 @@
 #include <FirebaseESP32.h>
 
 // wifi
-#define WIFI_SSID "Buffalo-G-10D8"
-#define WIFI_PW	"hcc468kcuhkk5"
+#define WIFI_SSID "********"
+#define WIFI_PW	"********"
 // firebase
 #define FIREBASE_URL "m5stack-data.firebaseio.com"
 #define FIREBASE_AUTH "QCT6zw9CXbqM6TITH1AROK3HITZhNdhVtZTuu3HB"
