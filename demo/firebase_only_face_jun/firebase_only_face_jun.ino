@@ -13,12 +13,12 @@ int received_face=0;//以前受け取った値と比較する用
 int count = 0;//loopの周期をカウント
 
 //wifi
-#define WIFI_SSID "**********"//自分のルーターのSSIDに変更してください
-#define WIFI_PASSWORD "***************:" //自分のルーターのパスワードに変更してください
+#define WIFI_SSID "Buffalo-G-10D8"//自分のルーターのSSIDに変更してください
+#define WIFI_PASSWORD "hcc468kcuhkk5" //自分のルーターのパスワードに変更してください
 
 // FirebaseのデータベースURL（自分のデータベースURLに変更してください）
 #define FIREBASE_DATABASE_URL "m5data2-868b2.firebaseio.com"
-#define FIREBASE_AUTH "***********************"//Slackで送ったものに変更
+#define FIREBASE_AUTH "qeG2HHAbMYz23abY1dKTwSbyhikt48Y0PySJhpJo"//Slackで送ったものに変更
 
 FirebaseData firebaseData;
 

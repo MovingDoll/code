@@ -29,12 +29,12 @@ PortHub porthub;
 uint8_t HUB_ADDR[6]={HUB1_ADDR,HUB2_ADDR,HUB3_ADDR,HUB4_ADDR,HUB5_ADDR,HUB6_ADDR};
 
 //wifi
-#define WIFI_SSID "************"//自分のルーターのSSIDに変更してください
-#define WIFI_PASSWORD "**********" //自分のルーターのパスワードに変更してください
+#define WIFI_SSID "techgarage"//自分のルーターのSSIDに変更してください
+#define WIFI_PASSWORD "killtheproject" //自分のルーターのパスワードに変更してください
 
 // FirebaseのデータベースURL（自分のデータベースURLに変更してください）
 #define FIREBASE_DATABASE_URL "m5data2-868b2.firebaseio.com"
-#define FIREBASE_AUTH "*********************"
+#define FIREBASE_AUTH "qeG2HHAbMYz23abY1dKTwSbyhikt48Y0PySJhpJo"
 FirebaseData firebaseData;
 //*****セットアップ******************
 void setup() {
@@ -90,7 +90,7 @@ void send(int angle){
  // int str[] = {1,2,3,4,5};
 //  
 //  arr.set("/[0]/[1]", (const int) str);
-  Firebase.setInt(firebaseData, "/M5Stack/dog/angle2", angle);
+  Firebase.setInt(firebaseData, "/M5Stack/dog/angle", angle);
   return;
 }
 
@@ -103,7 +103,7 @@ void loop() {
   //相手がメッセージ或いは回転角センサーの値を更新したら、それを検知して変更を反映させる
     
   //Aボタン→減少、Cボタン→増加　Bボタン→データ送信
-  if (M5.BtnA.wasReleased()) {
+  if (M5.BtnA.wasPressed()) {
     num--;
     M5.Lcd.fillScreen(BLACK);
     eye(num%6);
@@ -115,7 +115,7 @@ void loop() {
     eye(num%6);
   }
   
-  if(M5.BtnB.wasReleased()) {
+  if(M5.BtnB.wasPressed()) {
     M5.Lcd.setCursor(100, 200);
     M5.Lcd.setTextSize(5);
     M5.Lcd.print("send!");
@@ -142,7 +142,7 @@ void loop() {
 //  }
   //10回に１回or毎回データベースにアクセスし、変化があるか確認する
   //if(count%1==0){
-    if(Firebase.getInt(firebaseData, "/M5Stack/dog/angle2")){
+    if(Firebase.getInt(firebaseData, "/M5Stack/cat/angle")){
       now_received_angle = int(firebaseData.intData());
     }
     
@@ -176,8 +176,8 @@ void loop() {
       M5.Lcd.print("received!");
     }
   //}
-  count++;
+  //count++;
 
-  delay(100);
+  //delay(100);
 
 }
