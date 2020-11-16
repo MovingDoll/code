@@ -20,7 +20,10 @@ void angle_input(){
 	char changed = 0;
 	while (confirm == 0){
 		M5.update();
-		angle = porthub.hub_a_read_value(HUB_ADDR[0]) / 3.5;
+		// read angle
+		angle = porthub.hub_a_read_value(HUB_ADDR[0]) / 2.5 - 10;
+		if (angle < 0){ angle = 0; }
+		if (angle > 255){ angle = 255; }
 
 		if (M5.BtnA.wasPressed()){ changed = 1; if (digit > 0){ digit--; } }
 		if (M5.BtnB.wasPressed()){ changed = 1; confirm = 1; }

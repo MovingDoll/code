@@ -24,6 +24,15 @@ void printAcc(){
     M5.Lcd.print("To IP: ");
     M5.Lcd.print(ip2);
 }
+void printBtn(){ // IP, send, face
+  M5.Lcd.setTextSize(3);
+  M5.Lcd.setCursor(50, 210);
+  M5.Lcd.print("IP");
+  M5.Lcd.setCursor(125, 210);
+  M5.Lcd.print("send");
+  M5.Lcd.setCursor(220, 210);
+  M5.Lcd.print("face");  
+}
 void strtoip(IPAddress ip, String s){
   for (int i=0; i<4; i++){
     int digit = 0;

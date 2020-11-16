@@ -23,8 +23,8 @@ PortHub porthub;
 uint8_t HUB_ADDR[6]={HUB1_ADDR,HUB2_ADDR,HUB3_ADDR,HUB4_ADDR,HUB5_ADDR,HUB6_ADDR};
 
 // wifi
-#define WIFI_SSID     "************"    //自分のルーターのSSIDに変更してください
-#define WIFI_PASSWORD "************"     //自分のルーターのパスワードに変更してください
+#define WIFI_SSID     "Buffalo-G-10D8"    //自分のルーターのSSIDに変更してください
+#define WIFI_PASSWORD "hcc468kcuhkk5"     //自分のルーターのパスワードに変更してください
 
 // Firebase
 #define FIREBASE_DATABASE_URL "m5stack-data.firebaseio.com"
@@ -73,6 +73,7 @@ void setup() {
   porthub.begin(); // PbHUB UNIT
 
   eye(num%6);
+  printBtn();
 }
 /***************Setup***************&***/
 
@@ -109,16 +110,18 @@ void loop() {
   if (M5.BtnC.wasPressed()){
     num = (num + 1) % 6;
     eye(num%6);
+    printBtn(); // IP, send, face
   }
 
   // send face
   if(M5.BtnB.wasPressed()) {
-    M5.Lcd.setCursor(100, 200);
+    M5.Lcd.setCursor(95, 200);
     M5.Lcd.setTextSize(5);
-    M5.Lcd.print("send!");
+    M5.Lcd.print("send");
     Firebase.setString(firebaseData, topost+"/name", mypost);
     Firebase.setInt(firebaseData, topost+"/face", num);
     eye(num%6);
+    printBtn(); // IP, send, face
   }
 
   // read angle
@@ -136,8 +139,8 @@ void loop() {
     now_received_angle = int(firebaseData.intData());
   }
 
-  //前と比べて20以上変化あれば回転(負荷を減らすため)
-  if(abs(now_received_angle-received_angle) > 20){
+  // SERVO
+  if(now_received_angle != received_angle){
     Servo_write_us(0,now_received_angle*3);
     Serial.print("received");
     Serial.print(now_received_angle);
@@ -161,5 +164,6 @@ void loop() {
       }
 	  }
 	  eye(num%6);
+    printBtn();
   }
 }
