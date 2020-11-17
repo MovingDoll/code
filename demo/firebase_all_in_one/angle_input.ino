@@ -67,26 +67,36 @@ void angle_input(){
 
 int received(){
 	int proceed = 0;
+  String received_ip;
 	eye(num%6);
   M5.Lcd.setCursor(0, 10);
   M5.Lcd.setTextSize(1);
   if (Firebase.getString(firebaseData, mypost+"/name")){
-    strtoip(ip2, String(firebaseData.stringData()));
+    received_ip = String(firebaseData.stringData());
+    strtoip2(received_ip);
+    Serial.print("received from IP: " + received_ip);
     M5.Lcd.print("received from: ");
     M5.Lcd.print(ip2);
   }
-  
-	M5.Lcd.setTextSize(3);
-	M5.Lcd.setCursor(45,210);
-	M5.Lcd.print("No");
-	M5.Lcd.setCursor(110, 210);
-	M5.Lcd.print("reply?");
-	M5.Lcd.setCursor(235, 210);
-	M5.Lcd.print("YES");
-	while (proceed == 0){
-    M5.update();
-		if (M5.BtnA.wasPressed()){ proceed = -1; }
-		if (M5.BtnC.wasPressed()){ proceed = 1; }
-	}
+  if (received_ip != topost){
+    M5.Lcd.setTextSize(3);
+    M5.Lcd.setCursor(45, 210);
+    M5.Lcd.print("No");
+    M5.Lcd.setCursor(110, 210);
+    M5.Lcd.print("reply?");
+    M5.Lcd.setCursor(235, 210);
+    M5.Lcd.print("YES");
+    while (proceed == 0){
+      M5.update();
+      if (M5.BtnA.wasPressed()){ proceed = -1; }
+      if (M5.BtnC.wasPressed()){ proceed = 1; }
+    }
+  } else {
+    M5.Lcd.setTextSize(3);
+    M5.Lcd.setCursor(85, 210);
+    M5.Lcd.print("received");
+    delay(2000);
+    proceed = -1;
+  }
   return proceed;
 }

@@ -152,7 +152,7 @@ void loop() {
     now_received_face = int(firebaseData.intData());
   }
   if(now_received_face!=received_face){
-    num = now_received_face;   
+    num = now_received_face;
     Serial.print("received");
     Serial.print(num);
     Serial.println("\n");

@@ -33,14 +33,17 @@ void printBtn(){ // IP, send, face
   M5.Lcd.setCursor(220, 210);
   M5.Lcd.print("face");  
 }
-void strtoip(IPAddress ip, String s){
-  for (int i=0; i<4; i++){
-    int digit = 0;
-    for (int j=0; s[j]!='.' && s[j]!='\0'; j++){
-      digit += digit*10 + s[j] - '0';
-    }
-    ip[i] = digit;
-  }  
+void strtoip2(String s){
+  int digit = 0;
+  int index = 0;
+  for (int i=1; s[i]!='\0'; i++){
+    digit = digit * 10 + s[i] - '0';
+    if ((i - 1) % 3 == 2){
+      ip2[index] = digit;
+      digit = 0;
+      index++;
+    } 
+  }
 }
 int8_t getBatteryLevel(){
 	Wire.beginTransmission(0x75);
